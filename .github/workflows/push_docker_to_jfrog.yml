@@ -1,0 +1,65 @@
+name: Push Docker to JFrog
+on:
+  workflow_call:
+    inputs:
+      dockerfile_path:
+        required: true
+        type: string
+      JFrog_URL:
+        required: true
+        type: string
+      JFrog_USER:
+        required: true
+        type: string        
+      docker_repository:
+        required: true
+        type: string
+      container_name:
+        required: true
+        type: string
+      container_version:
+        required: true
+        type: string
+    secrets:
+      JFrog_TOKEN:
+        required: true
+        type: string
+
+jobs:
+  Push-Docker-to-JFrog:
+    runs-on: ubuntu-latest
+    steps:
+      # Setup phase
+      - name: Setup JFrog
+        uses: jfrog/setup-jfrog-cli@v2
+        env:
+          JF_URL: ${{ inputs.JFrog_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFrog_TOKEN }}    
+
+      - name: Login to JFrog Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.JFrog_URL }}
+          username: ${{ inputs.JFrog_USER }}
+          password: ${{ secrets.JFrog_TOKEN }}
+
+      - name: Test JFrog
+        run: jf rt ping
+
+      - name: Fail if the given version is existing
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: |
+          if ((`jf rt search ayola-docker-local/predictor/0.0.3/* 2> /dev/null | wc -c` > 4 )); then 
+            exit 1
+          fi
+
+      - name: Build docker image
+        run: docker build ${{ inputs.dockerfile_path }} -t ${{ inputs.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
+
+      - name: Push docker image from master branch
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: docker push ${{ inputs.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
+
+      - name: Push docker image from non-master branch
+        if: ${{ github.ref != 'refs/heads/master' }}
+        run: docker push ${{ inputs.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}-beta
