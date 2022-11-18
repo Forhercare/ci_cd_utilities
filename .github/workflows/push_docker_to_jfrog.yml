@@ -17,13 +17,10 @@ on:
     secrets:
       JFrog_TOKEN:
         required: true
-        type: string
       JFrog_URL:
         required: true
-        type: string
       JFrog_USER:
-        required: true
-        type: string           
+        required: true         
 
 jobs:
   Push-Docker-to-JFrog:
