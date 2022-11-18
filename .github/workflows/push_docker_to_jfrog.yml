@@ -44,8 +44,8 @@ jobs:
         run: jf rt ping
 
       - name: Debug for ls
-        run: ls -R
-
+        run: ls -R ${{ github.workspace }}
+ 
       - name: Fail if the given version is existing
         if: ${{ github.ref == 'refs/heads/master' }}
         run: |
@@ -56,9 +56,10 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: ${{ inputs.docker_artifact }}
+          path: ${{ github.workspace }}/docker
 
       - name: Build docker image
-        run: docker build ${{ inputs.docker_artifact }} -t ${{ secrets.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
+        run: docker build ${{ github.workspace }}/docker -t ${{ secrets.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
 
       - name: Push docker image from master branch
         if: ${{ github.ref == 'refs/heads/master' }}
