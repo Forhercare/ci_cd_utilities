@@ -36,8 +36,8 @@ jobs:
       - name: Login to JFrog Docker Registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ inputs.JFrog_URL }}
-          username: ${{ inputs.JFrog_USER }}
+          registry: ${{ secrets.JFrog_URL }}
+          username: ${{ secrets.JFrog_USER }}
           password: ${{ secrets.JFrog_TOKEN }}
 
       - name: Test JFrog
