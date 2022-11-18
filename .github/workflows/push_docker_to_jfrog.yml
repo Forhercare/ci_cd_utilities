@@ -2,7 +2,7 @@ name: Push Docker to JFrog
 on:
   workflow_call:
     inputs:
-      dockerfile_path:
+      docker_artifact:
         required: true
         type: string    
       docker_repository:
@@ -50,8 +50,12 @@ jobs:
             exit 1
           fi
 
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.docker_artifact }}
+
       - name: Build docker image
-        run: docker build ${{ inputs.dockerfile_path }} -t ${{ secrets.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
+        run: docker build ${{ inputs.docker_artifact }} -t ${{ secrets.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
 
       - name: Push docker image from master branch
         if: ${{ github.ref == 'refs/heads/master' }}
