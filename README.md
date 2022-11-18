@@ -19,7 +19,7 @@ The `push_docker_to_jfrog.yml` contains a workflow that builds a docker image an
 When triggered from non-master branch, the docker gets a `-beta` after its version. Beta versions of containers can be overwritten by this pipeline. From master branch the docker image will have only its version but it will check its existence in the Artifactory. It won't overwrite an already existing version.
 
 Parameters:
-* `dockerfile_path`: The path to the Dockerfile to build.
+* `docker_artifact`: The path to the artifact containing the Dockerfile and the needed files
 * `docker_repository`: The URL to docker repository. For example acme-docker-local
 * `container-name`: The name of the new container
 * `container-version`: The version of the container. For example `2.1.4`
