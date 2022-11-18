@@ -4,13 +4,7 @@ on:
     inputs:
       dockerfile_path:
         required: true
-        type: string
-      JFrog_URL:
-        required: true
-        type: string
-      JFrog_USER:
-        required: true
-        type: string        
+        type: string    
       docker_repository:
         required: true
         type: string
@@ -24,6 +18,12 @@ on:
       JFrog_TOKEN:
         required: true
         type: string
+      JFrog_URL:
+        required: true
+        type: string
+      JFrog_USER:
+        required: true
+        type: string           
 
 jobs:
   Push-Docker-to-JFrog:
