@@ -30,7 +30,7 @@ jobs:
       - name: Setup JFrog
         uses: jfrog/setup-jfrog-cli@v2
         env:
-          JF_URL: ${{ inputs.JFrog_URL }}
+          JF_URL: ${{ secrets.JFrog_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFrog_TOKEN }}    
 
       - name: Login to JFrog Docker Registry
@@ -51,12 +51,12 @@ jobs:
           fi
 
       - name: Build docker image
-        run: docker build ${{ inputs.dockerfile_path }} -t ${{ inputs.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
+        run: docker build ${{ inputs.dockerfile_path }} -t ${{ secrets.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
 
       - name: Push docker image from master branch
         if: ${{ github.ref == 'refs/heads/master' }}
-        run: docker push ${{ inputs.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
+        run: docker push ${{ secrets.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}
 
       - name: Push docker image from non-master branch
         if: ${{ github.ref != 'refs/heads/master' }}
-        run: docker push ${{ inputs.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}-beta
+        run: docker push ${{ secrets.JFrog_URL }}/${{ inputs.docker_repository }}/${{ inputs.container_name }}:${{ inputs.container_version }}-beta
