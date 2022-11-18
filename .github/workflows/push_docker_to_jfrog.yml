@@ -30,13 +30,13 @@ jobs:
       - name: Setup JFrog
         uses: jfrog/setup-jfrog-cli@v2
         env:
-          JF_URL: ${{ secrets.JFrog_URL }}
+          JF_URL: https://${{ secrets.JFrog_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFrog_TOKEN }}    
 
       - name: Login to JFrog Docker Registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ secrets.JFrog_URL }}
+          registry: https://${{ secrets.JFrog_URL }}
           username: ${{ secrets.JFrog_USER }}
           password: ${{ secrets.JFrog_TOKEN }}
 
