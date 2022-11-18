@@ -43,6 +43,9 @@ jobs:
       - name: Test JFrog
         run: jf rt ping
 
+      - name: Debug for ls
+        run: ls -R /
+
       - name: Fail if the given version is existing
         if: ${{ github.ref == 'refs/heads/master' }}
         run: |
